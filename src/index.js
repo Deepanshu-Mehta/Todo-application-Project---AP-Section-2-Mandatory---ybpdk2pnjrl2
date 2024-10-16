@@ -32,6 +32,53 @@ app.post("/create", async (req, res) => {
 });
 
 //write your code here
+app.get('/getAll',async (req,res)=>{
+  try{
+    const allTodos = await prisma.todos.findMany();
+    return res.status(200).json({allTodos});
+  }catch(err){
+    return res.status(500).json({message : "Internal Server Error"});
+  }
+  
+
+})
+
+app.patch("/update/:id",async (req,res)=>{
+  const id = req.params.id;
+  const {task, completed} = req.body;
+  if(!task || !completed){
+    return res.status(400).json({message : "No fields provided to update"});
+  }
+  try{
+    const updateTodo = await prisma.todos.update({
+      where : {id},
+      data : {
+        task,completed
+      }
+    })
+    if(!updateTodo){
+      res.status(404).json({message : "Todo not found"});
+    }
+    return res.status(200).json({message: "Todo is updated", updateTodo});
+  }
+  catch(err){
+    return res.status(500).json({message : "Internal Server Error"});
+  }
+  
+})
+
+app.delete("/delete/:id",async (req,res)=>{
+  const id = req.params.id;
+  const deletedTodo = await prisma.todos.delete({
+    where : {
+      id
+    }
+  })
+  if(!deletedTodo){
+    return res.status(404).json({message : "Todo not found"})
+  }
+  return res.status(200).json({message : "Todo is Deleted"});
+})
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
