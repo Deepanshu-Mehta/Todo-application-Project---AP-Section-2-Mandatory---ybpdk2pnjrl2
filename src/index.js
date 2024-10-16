@@ -56,7 +56,7 @@ app.patch("/update/:id",async (req,res)=>{
         task,completed
       }
     })
-    if(!updateTodo){
+    if(updateTodo.length == 0){                                  
       return res.status(404).json({message : "Todo not found"});
     }
     return res.status(200).json({message: "Todo is updated", todo : updateTodo});
