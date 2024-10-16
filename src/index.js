@@ -35,7 +35,7 @@ app.post("/create", async (req, res) => {
 app.get('/getAll',async (req,res)=>{
   try{
     const allTodos = await prisma.todos.findMany();
-    return res.status(200).json({allTodos});
+    return res.status(200).json({todos : allTodos});
   }catch(err){
     return res.status(500).json({message : "Internal Server Error"});
   }
