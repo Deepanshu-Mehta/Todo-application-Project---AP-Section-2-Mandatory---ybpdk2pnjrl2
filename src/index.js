@@ -51,7 +51,7 @@ app.patch("/update/:id",async (req,res)=>{
   }
   try{
     const updateTodo = await prisma.todos.update({
-      where : {id},
+      where : {id : parseInt(id)},
       data : {
         task,completed
       }
@@ -71,7 +71,7 @@ app.delete("/delete/:id",async (req,res)=>{
   const id = req.params.id;
   const deletedTodo = await prisma.todos.delete({
     where : {
-      id
+      id : parseInt(id)
     }
   })
   if(!deletedTodo){
