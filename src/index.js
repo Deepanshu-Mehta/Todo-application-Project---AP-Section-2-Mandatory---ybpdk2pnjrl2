@@ -46,7 +46,7 @@ app.get('/getAll',async (req,res)=>{
 app.patch("/update/:id",async (req,res)=>{
   const id = req.params.id;
   const {task, completed} = req.body;
-  if(!task || !completed){
+  if(!task && !completed){
     return res.status(400).json({message : "No fields provided to update"});
   }
   try{
