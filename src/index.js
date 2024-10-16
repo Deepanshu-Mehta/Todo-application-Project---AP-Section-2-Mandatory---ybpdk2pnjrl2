@@ -50,15 +50,18 @@ app.patch("/update/:id",async (req,res)=>{
     return res.status(400).json({message : "No fields provided to update"});
   }
   try{
+    const todoexist = await prisma.todos.findUnique({
+      where : {id : parseInt(id)}
+    });
+    if(!todoexist){
+      return res.status(404).json({message : "Todo not found"});
+    }
     const updateTodo = await prisma.todos.update({
       where : {id : parseInt(id)},
       data : {
         task,completed
       }
     })
-    if(updateTodo.length == 0){                                  
-      return res.status(404).json({message : "Todo not found"});
-    }
     return res.status(200).json({message: "Todo is updated", todo : updateTodo});
   }
   catch(err){
@@ -69,14 +72,17 @@ app.patch("/update/:id",async (req,res)=>{
 
 app.delete("/delete/:id",async (req,res)=>{
   const id = req.params.id;
+  const todoexist = await prisma.todos.findUnique({
+    where : {id : parseInt(id)}
+  });
+  if(!todoexist){
+    return res.status(404).json({message : "Todo not found"});
+  }
   const deletedTodo = await prisma.todos.delete({
     where : {
       id : parseInt(id)
     }
   })
-  if(!deletedTodo){
-    return res.status(404).json({message : "Todo not found"})
-  }
   return res.status(200).json({message : "Todo is Deleted"});
 })
 
